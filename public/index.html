@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>Chat</title>
+  </head>
+  <body style = "margin : 100px;">
+    <input type="text" placeholder="Mensaje" id="message" />
+    <button onClick="sendMessage();">Enviar mensaje </button>
+    <div id="messageList"></div>
+
+    <script src="//cdn.rawgit.com/feathersjs/feathers-client/v1.1.0/dist/feathers.js"></script>
+    <script src="socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      var socket = io();
+      var app = feathers();
+
+      app.configure(feathers.socketio ( socket ) );
+      var messages = app.service('message');
+      messages.on('created', function ( message ){
+
+        var messageList = document.getElementById("messageList");
+        messageList.innerHTML += "<h4>"+message.text+"</h4>";
+
+      });
+      function sendMessage(){
+        var messageValue = document.getElementById("message").value;
+        messages.create({text: messageValue});
+      }
+    </script>
+  </body>
+</html>
